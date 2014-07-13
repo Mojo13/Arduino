@@ -1,0 +1,127 @@
+#include <EEPROM.h>                                // Include the EEPROM library
+
+/**************************************************************************************************************
+       Settings
+**************************************************************************************************************/
+#define crossTime 3000
+#define changeTime 1500
+#define waitTime 3000
+#define beeps 50
+#define beepLength 10
+#define beepPitch 1
+#define beepSilence 75
+
+
+// PIN CONFIGUTRATION
+#define RedLightCar  13
+#define YellowLightCar  12
+#define GreenLightCar  11
+#define GreenLightPerson  10
+#define RedLightPerson  9
+#define Buzzer  8
+#define WaitLight  7
+#define button  6
+
+
+// Other Settings
+#define disableBeeper 0                          // Which byte of memory will store the
+                                                 // disableBeeper value.
+/*
+/**************************************************************************************************************
+       End of settings
+**************************************************************************************************************/
+
+int stopCount = 0;
+int firstRun = 1;
+int LightDuration =0;                        // Count 0
+int LightLimit = 10000 ;                      // 10 seconds
+
+/**************************************************************************************************************
+       Setup
+**************************************************************************************************************/
+
+void setup()
+{
+  Serial.begin(9600);                           // Setup for serial communuication at 9600bps    
+  pinMode(NSRedLightCar, OUTPUT);                      // Define pin modes
+  pinMode(NSYellowLightCar, OUTPUT);
+  pinMode(NSGreenLightCar, OUTPUT);
+  pinMode(EWRedLightCar, OUTPUT);                      // Define pin modes
+  pinMode(EWYellowLightCar, OUTPUT);
+  pinMode(EWGreenLightCar, OUTPUT);
+  pinMode(RedLightPerson, OUTPUT);
+  pinMode(GreenLightPerson, OUTPUT);
+  pinMode(WaitLight, OUTPUT);
+  pinMode(Buzzer, OUTPUT);
+  pinMode(button, INPUT);
+}
+
+/**************************************************************************************************************
+       Test hardware
+**************************************************************************************************************/
+ void loop()
+{
+    digitalWrite(RedLightCar, HIGH);                 // Turn on  Red  traffic light
+    delay (1000);
+    digitalWrite(RedLightCar, LOW);                  // Turn off Red  traffic light
+
+    digitalWrite(YellowLightCar, HIGH);              // Turn on  Yellow  traffic light
+    delay (1000);
+    digitalWrite(YellowLightCar, LOW);               // Turn off Yellow  traffic light
+  
+    digitalWrite(GreenLightCar, HIGH);               // Turn on  Green  traffic light
+    delay (1000);
+    digitalWrite(GreenLightCar, LOW);                // Turn off Green  traffic light  
+
+    digitalWrite(RedLightPerson, HIGH);              // Turn on  Red  Person light
+    delay (1000);
+    digitalWrite(RedLightPerson, LOW);               // Turn off Red  Person light
+
+    digitalWrite(GreenLightPerson, HIGH);            // Turn on  Green  Person light
+    delay (1000);
+    digitalWrite(GreenLightPerson, LOW);             // Turn off Green  Person light 
+    
+    digitalWrite(WaitLight, HIGH);                   // Turn on  White wait  Person light
+    delay (1000);
+    digitalWrite(WaitLight, LOW);                    // Turn off White Wait  Person light
+    
+    digitalWrite(Buzzer, HIGH);                      // Turn on  Buzzer
+    delay (1000);
+    digitalWrite(Buzzer, LOW);                       // Turn off Buzzer
+   
+/**************************************************************************************************************
+       Trafic light sequence
+**************************************************************************************************************/
+    
+    while (digitalRead(button) == HIGH) ;                                                     // ---- while button is not pressed cycle traffic lights
+     {
+          LightDuration=0;
+          for (int LightDuration = 0; LightDuration < LightLimit; LightDuration++) {        
+            digitalWrite(RedLightCar, HIGH);
+          }
+          
+          LightDuration=0;
+          for (int LightDuration = 0; LightDuration < LightLimit; LightDuration++) {
+          {digitalWrite(YellowLightCar, HIGH);
+          } 
+            
+          LightDuration=0;
+          for (int LightDuration = 0; LightDuration < LightLimit; LightDuration++) {
+          {digitalWrite(GreenLightCar, HIGH);
+          }
+      }                                                                                       // --- End of While Statement
+  
+/**************************************************************************************************************
+       Crossing sequence
+**************************************************************************************************************/
+
+
+          
+          {digitalWrite(WaitLight, HIGH);
+          }
+        }
+        }
+}
+
+
+
