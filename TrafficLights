@@ -1,0 +1,134 @@
+#include <EEPROM.h>                                // Include the EEPROM library
+
+/**************************************************************************************************************
+       Settings
+**************************************************************************************************************/
+#define crossTime 3000
+#define changeTime 1500
+#define waitTime 3000
+
+
+
+// PIN CONFIGUTRATION
+#define NSRedLightCar  13
+#define NSYellowLightCar  12
+#define NSGreenLightCar  11
+#define EWRedLightCar  10
+#define EWYellowLightCar  9
+#define EWGreenLightCar  8
+
+                         
+/***************************************************************************************************************
+       End of settings
+**************************************************************************************************************/
+
+int NSCross = 1;                             // North South Crossing Flag 1= on  & 0 = off
+int EWCross = 0;                             // East West Crossing Flag 1= on  & 0 = off
+int TestHW = 1;                              // Test Hardware Flag 1= on  & 0 = off
+int LightDuration =0;                        // Count 0
+int LightLimit = 2000 ;                      // 2 seconds
+
+/**************************************************************************************************************
+       Setup
+**************************************************************************************************************/
+
+void setup()
+{
+  Serial.begin(9600);                           // Setup for serial communuication at 9600bps    
+  pinMode(NSRedLightCar, OUTPUT);               // Define pin modes
+  pinMode(NSYellowLightCar, OUTPUT);
+  pinMode(NSGreenLightCar, OUTPUT);
+  pinMode(EWRedLightCar, OUTPUT);                      
+  pinMode(EWYellowLightCar, OUTPUT);
+  pinMode(EWGreenLightCar, OUTPUT);
+
+}
+
+
+ void loop()
+{
+  
+/**************************************************************************************************************
+       Test hardware
+**************************************************************************************************************/
+
+
+    Serial.print("Before Hardware Test received: ");   // Serial confirmation of flag settings
+    Serial.println(TestHW, DEC);
+    
+ if (TestHW == 1) {
+        digitalWrite(NSRedLightCar, HIGH);                 // Turn on  Red  traffic light
+        digitalWrite(NSYellowLightCar, HIGH);              // Turn on  Yellow  traffic light
+        digitalWrite(NSGreenLightCar, HIGH);               // Turn on  Green  traffic light
+        digitalWrite(EWRedLightCar, HIGH);                 // Turn on  Red  traffic light
+        digitalWrite(EWYellowLightCar, HIGH);              // Turn on  Yellow  traffic light
+        digitalWrite(EWGreenLightCar, HIGH);               // Turn on  Green  traffic light
+
+        delay (1000);
+
+        digitalWrite(NSRedLightCar, LOW);                  // Turn off Red  traffic light
+        digitalWrite(NSYellowLightCar, LOW);               // Turn off Yellow  traffic light
+        digitalWrite(NSGreenLightCar, LOW);                // Turn off Green  traffic light  
+        digitalWrite(EWRedLightCar, LOW);                  // Turn off Red  traffic light
+        digitalWrite(EWYellowLightCar, LOW);               // Turn off Yellow  traffic light
+        digitalWrite(EWGreenLightCar, LOW);                // Turn off Green  traffic light  
+    
+        delay (1000);
+        TestHW = 0;                                        // Set Hardware Flag test to off
+        
+        Serial.print("End of Hardware Test received: ");   // Serial confirmation of flag settings
+        Serial.println(TestHW, DEC);
+ }
+ 
+/**************************************************************************************************************
+       Trafic light sequence
+**************************************************************************************************************/
+ 
+if (NSCross== 1) {                                    // traffic Flag North South
+  
+           digitalWrite(EWRedLightCar, HIGH);        //  Set East west to Stop
+  
+           digitalWrite(NSRedLightCar, HIGH);
+           delay (LightLimit);
+           digitalWrite(NSRedLightCar, LOW);
+
+           digitalWrite(NSYellowLightCar, HIGH);
+           delay (LightLimit);
+           digitalWrite(NSYellowLightCar, LOW);
+           
+           digitalWrite(NSGreenLightCar, HIGH);
+           delay (LightLimit); 
+           digitalWrite(NSGreenLightCar, LOW);
+
+           NSCross=0;
+           EWCross=1;
+}
+   
+if (EWCross== 1) {                                     // traffic flag East West
+
+           digitalWrite(NSRedLightCar, HIGH);          // Set North South to Stop
+
+           digitalWrite(EWRedLightCar, HIGH);
+           delay (LightLimit);
+           digitalWrite(EWRedLightCar, LOW);
+           
+           digitalWrite(EWYellowLightCar, HIGH);
+           delay (LightLimit);
+           digitalWrite(EWYellowLightCar, LOW);
+           
+           digitalWrite(EWGreenLightCar, HIGH);
+           delay (LightLimit); 
+           digitalWrite(EWGreenLightCar, LOW);
+           EWCross=0;
+           NSCross=1;
+}
+
+//      Serial.print("End of Prog received: ");         // Serial confirmation of flag settings
+//      Serial.println(TestHW, DEC);       
+       
+        }
+
+          
+
+
+
